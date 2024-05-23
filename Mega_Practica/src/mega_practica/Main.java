@@ -23,16 +23,16 @@ public class Main {
         boolean esta = true;
 
         //Selectores de switch
-        int eleccion;
-        int eleccion2;
-        int eleccion3;
+        int eleccion=0;
+        int eleccion2=0;
+        int eleccion3=0;
 
 
         //Datos de los usuarios
-        String usuario;
-        String mail;
-        String contraseña;
-        String backup;
+        String usuario="";
+        String mail="";
+        String contraseña="";
+        String backup="";
         int tipo_normal = 3;
 
         //Datos de las recetas
@@ -40,10 +40,12 @@ public class Main {
         String breve_desc;
         String ingredientes;
         String preparacion;
-        ResultSet rs;
+        ResultSet rs = null;
         
         //Datos del Buscador
-        String nombre;
+        String nombre="";
+        int opc=0;
+        int cont=0;
         
         do {
             System.out.println("-------MENU DE INICIO--------");
@@ -209,7 +211,7 @@ public class Main {
                                 System.out.println("añadir etiquetas");
                                 String consul = "select * from etiquetas";
                                 rs = c.select(consul);
-                                int cont;
+                                
                                 do {
                                     while (rs.next()) {
                                         System.out.println(rs.getString(1) + " - " + rs.getString(2));
@@ -254,7 +256,7 @@ public class Main {
                                     cont = sc.nextInt();
                                     
                                     if (cont != -1) {
-                                        int opc = -1;
+                                        opc = -1;
                                         String consulta_ver_receta = "Select * from recetas where ident=" + cont + "";
                                         try {
                                             c.select(consulta_ver_receta);
@@ -333,8 +335,10 @@ public class Main {
                             case 3:
                                 System.out.println("");
                                 System.out.println("LISTA DE RECETAS");
+                                
+                                 c.menus(sc, eleccion3, nombre, c, rs, opc, cont, tipo_normal);
 
-                                do {
+                                /*do {
                                     consul_rece = "select * from recetas order by ident asc";
                                     rs = c.select(consul_rece);
                                     while (rs.next()) {
@@ -346,7 +350,7 @@ public class Main {
 
                                     cont = sc.nextInt();
                                     if (cont != -1) {
-                                        int opc = -1;
+                                        opc = -1;
                                         String consulta_ver_receta = "Select * from recetas where ident=" + cont + "";
                                         try {
                                             c.select(consulta_ver_receta);
@@ -363,7 +367,7 @@ public class Main {
                                             System.out.println("Ha fallado la consulta:");
                                             System.out.println(e.getLocalizedMessage());
                                         }
-
+                                        c.puntuacion(sc, opc, cont, c, rs);
                                         do {
                                             System.out.println("*¿Quieres introducir una puntuación? [0] NO [1] SÍ");
                                             try {
@@ -392,7 +396,7 @@ public class Main {
                                             }
                                         }
                                     }
-                                } while (cont != -1);
+                                } while (cont != -1);*/
 
                                 break;
 
@@ -401,7 +405,9 @@ public class Main {
 
                     break;
                 case 3:
-                    //solo ver recetas
+                    
+                    c.menus(sc, eleccion3, nombre, c, rs, opc, cont, tipo_normal);
+                    /*//solo ver recetas
                     System.out.println("........................................");
                     System.out.println(".............MENU DE BUSQUEDA...........");
                     System.out.println("........................................");
@@ -465,7 +471,7 @@ public class Main {
                             }
 
                             break;
-                    }
+                    }*/
 
                     break;
             }
