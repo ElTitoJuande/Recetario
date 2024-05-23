@@ -8,7 +8,7 @@ package mega_practica;
 import java.io.*;
 import java.sql.*;
 import java.util.Scanner;
-
+///////////////////////////////////////////////////////////////////★
 /**
  *
  * @author EAG
