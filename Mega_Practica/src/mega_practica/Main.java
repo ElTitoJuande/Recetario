@@ -23,16 +23,15 @@ public class Main {
         boolean esta = true;
 
         //Selectores de switch
-        int eleccion=0;
-        int eleccion2=0;
-        int eleccion3=0;
-
+        int eleccion = 0;
+        int eleccion2 = 0;
+        int eleccion3 = 0;
 
         //Datos de los usuarios
-        String usuario="";
-        String mail="";
-        String contraseña="";
-        String backup="";
+        String usuario = "";
+        String mail = "";
+        String contraseña = "";
+        String backup = "";
         int tipo_normal = 3;
 
         //Datos de las recetas
@@ -41,12 +40,12 @@ public class Main {
         String ingredientes;
         String preparacion;
         ResultSet rs = null;
-        
+
         //Datos del Buscador
-        String nombre="";
-        int opc=0;
-        int cont=0;
-        
+        String nombre = "";
+        int opc = 0;
+        int cont = 0;
+
         do {
             System.out.println("-------MENU DE INICIO--------");
             System.out.println(".............................");
@@ -151,8 +150,7 @@ public class Main {
                         }
                     } while (!esta);
                     sc.nextLine();
-                    
-                    
+
                     //COMPROBAR QUE LA CONTRASEÑA SEA VALIDA
                     String consulta_contraseña;
                     int res = 0;
@@ -160,12 +158,12 @@ public class Main {
                     do {
                         System.out.println("Introduce contraseña");
                         backup = sc.next();
-                        System.out.println(backup);
+                        //System.out.println(backup);
                         consulta_contraseña = "select count(*) from usuarios where nombre_usu='" + usuario + "' and contraseña='" + backup + "'";
                         rs = c.select(consulta_contraseña);
                         rs.next();
                         res = rs.getInt(1);
-                        System.out.println(res);
+                        //System.out.println(res);
 
                     } while (res == 0);
 
@@ -211,7 +209,7 @@ public class Main {
                                 System.out.println("añadir etiquetas");
                                 String consul = "select * from etiquetas";
                                 rs = c.select(consul);
-                                
+
                                 do {
                                     while (rs.next()) {
                                         System.out.println(rs.getString(1) + " - " + rs.getString(2));
@@ -231,21 +229,20 @@ public class Main {
                                 } while (cont != -1);
                                 break;
                             case 2:
-                                    System.out.println("MODIFICAR TUS RECETAS");
-                                    String consulta = "select tipo from usuarios where nombre_usu = '" +usuario+"'";
-                                    rs = c.select(consulta);
-                                    rs.next();
-                                    int resultado = rs.getInt(1);
-                                    
-                                    String consul_rece;
-                                    do {
-                                        if (resultado == 1) {
-                                            consul_rece = "select * from recetas order by ident asc";
-                                        }
-                                        else{
-                                            consul_rece = "select * from recetas where creador = '"+usuario+"' order by ident asc";
-                                        }
-                                    
+                                System.out.println("MODIFICAR TUS RECETAS");
+                                String consulta = "select tipo from usuarios where nombre_usu = '" + usuario + "'";
+                                rs = c.select(consulta);
+                                rs.next();
+                                int resultado = rs.getInt(1);
+
+                                String consul_rece;
+                                do {
+                                    if (resultado == 1) {
+                                        consul_rece = "select * from recetas order by ident asc";
+                                    } else {
+                                        consul_rece = "select * from recetas where creador = '" + usuario + "' order by ident asc";
+                                    }
+
                                     rs = c.select(consul_rece);
                                     while (rs.next()) {
                                         System.out.println("[" + rs.getString(1) + "] " + rs.getString(2));
@@ -254,7 +251,7 @@ public class Main {
                                     System.out.println("*SELECCIONA EL [ID] DE LA RECETA A MODIFICAR");
                                     System.out.println("*SALIR [-1]");
                                     cont = sc.nextInt();
-                                    
+
                                     if (cont != -1) {
                                         opc = -1;
                                         String consulta_ver_receta = "Select * from recetas where ident=" + cont + "";
@@ -286,7 +283,7 @@ public class Main {
                                                 sc.nextLine();
                                                 String descripcion = sc.nextLine();
                                                 String consulta_modificar = "update recetas set p_descripcion ='" + descripcion + "' where ident = " + cont;
-                                             
+
                                                 try {
                                                     c.insert(consulta_modificar);
                                                     rs.next();
@@ -325,7 +322,7 @@ public class Main {
                                                     System.out.println(e.getLocalizedMessage());
                                                 }
                                                 break;
-                                                
+
                                         }
                                     }
                                 } while (cont != -1);
@@ -335,68 +332,8 @@ public class Main {
                             case 3:
                                 System.out.println("");
                                 System.out.println("LISTA DE RECETAS");
-                                
-                                 c.menus(sc, eleccion3, nombre, c, rs, opc, cont, tipo_normal);
 
-                                /*do {
-                                    consul_rece = "select * from recetas order by ident asc";
-                                    rs = c.select(consul_rece);
-                                    while (rs.next()) {
-                                        System.out.println("[" + rs.getString(1) + "] " + rs.getString(2));
-                                    }
-                                    System.out.println("");
-                                    System.out.println("*SELECCIONA EL [ID] DE LA RECETA");
-                                    System.out.println("*SALIR [-1]");
-
-                                    cont = sc.nextInt();
-                                    if (cont != -1) {
-                                        opc = -1;
-                                        String consulta_ver_receta = "Select * from recetas where ident=" + cont + "";
-                                        try {
-                                            c.select(consulta_ver_receta);
-                                            rs = c.select(consulta_ver_receta);
-                                            rs.next();
-                                            System.out.println("");
-                                            System.out.println("[" + rs.getString(1) + "] " + rs.getString(2));
-                                            System.out.println("    -Creador: " + rs.getString(3));
-                                            System.out.println("    -Descripción: " + rs.getString(3));
-                                            System.out.println("    -Ingredientes: " + rs.getString(4));
-                                            System.out.println("    -Descripción: " + rs.getString(5));
-                                            System.out.println("");
-                                        } catch (SQLException e) {
-                                            System.out.println("Ha fallado la consulta:");
-                                            System.out.println(e.getLocalizedMessage());
-                                        }
-                                        c.puntuacion(sc, opc, cont, c, rs);
-                                        do {
-                                            System.out.println("*¿Quieres introducir una puntuación? [0] NO [1] SÍ");
-                                            try {
-                                                opc = sc.nextInt();
-                                            } catch (Exception e) { //NO FUNCIONA
-                                                System.out.println("Introduce [0] o [1]");
-                                                //System.out.println(e.getLocalizedMessage());
-                                                opc = -1;
-                                                sc.nextLine();
-                                            }
-
-                                        } while (opc < 0 || opc > 1);
-
-                                        if (opc == 1) {
-                                            System.out.println("*Introduce una puntuación: ");
-                                            float puntuacion = sc.nextFloat();
-                                            
-                                            String consulta_puntuacion = "update recetas set punt_tot= punt_tot+"+ puntuacion + ", n_punt=n_punt+1 where ident = "+ cont;
-                                            try {
-                                                c.insert(consulta_puntuacion);
-                                                rs.next();
-
-                                            } catch (SQLException e) {
-                                                System.out.println("Ha fallado la consulta:");
-                                                System.out.println(e.getLocalizedMessage());
-                                            }
-                                        }
-                                    }
-                                } while (cont != -1);*/
+                                c.menus(sc, eleccion3, nombre, c, rs, tipo_normal, opc, cont);
 
                                 break;
 
@@ -405,74 +342,9 @@ public class Main {
 
                     break;
                 case 3:
+                    tipo_normal = 3;
+                    c.menus(sc, eleccion3, nombre, c, rs, tipo_normal, opc, cont);
                     
-                    c.menus(sc, eleccion3, nombre, c, rs, opc, cont, tipo_normal);
-                    /*//solo ver recetas
-                    System.out.println("........................................");
-                    System.out.println(".............MENU DE BUSQUEDA...........");
-                    System.out.println("........................................");
-                    System.out.println("..............POR AUTOR [1].............");
-                    System.out.println("........POR NOMBRE DE RECETA [2]........");
-                    System.out.println("............POR ETIQUETAS [3]...........");
-                    System.out.println("........................................");
-                    
-                    eleccion3=sc.nextInt();
-                    sc.nextLine();
-                    switch (eleccion3) {
-                        case 1:
-                            System.out.println("....BUSCADOR POR NOMBRE DE CHEF....");
-                            nombre=sc.nextLine();
-                            String consulta_buscador1="Select * from recetas where creador='"+nombre+"'";
-                            rs = c.select(consulta_buscador1);
-                                while (rs.next()) {
-                                    System.out.println("[" + rs.getString(1) + "] " +" "+ rs.getString(2) +" "+ rs.getString(3) +" "+ rs.getString(4) +" "+ rs.getString(5));
-                                }
-                            break;
-                        case 2:
-                            System.out.println("....BUSCADOR POR NOMBRE DE RECETA....");
-                            nombre=sc.nextLine();
-                            String consulta_buscador2="Select * from recetas where nombre='"+nombre+"'";
-                            rs = c.select(consulta_buscador2);
-                                while (rs.next()) {
-                                    System.out.println("[" + rs.getString(1) + "] " +" "+rs.getString(2) +" "+ rs.getString(3) +" "+ rs.getString(4) +" "+ rs.getString(5));
-                                }
-                            break;
-                        case 3:
-                            rs = c.select("select count(*) from etiquetas");
-                            rs.next();
-                            System.out.println("....BUSCADOR POR ETIQUETA DE RECETA....");
-                            while (rs.next()) {
-                                System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));
-                            }
-                            
-                            
-                            String consul = "select nombre, creador, p_descripcion, ingredientes, descripcion from recetas, rece_eti where recetas.ident = rece_eti.ident and ident_e =";
-                            int eti = 0;
-
-                            for (int i = 0; i < 26 && eti != -1; i++) {
-                                System.out.println("Seleccione el ID de la etiqueta que quieras añadir [-1] SALIR");
-                                eti = sc.nextInt();
-
-                                if (i == 0) {
-                                    consul += eti;
-                                } else if (eti != -1) {
-
-                                    consul = consul + " and recetas.ident in (select r.ident from recetas r, rece_eti where r.ident = rece_eti.ident and ident_e =" + eti + ")";
-
-                                }
-                                System.out.println("ETIQUETA: " + eti);
-
-                            }
-                            System.out.println(consul);
-                            
-                            rs = c.select(consul);
-                            while (rs.next()) {
-                                System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));
-                            }
-
-                            break;
-                    }*/
-
                     break;
             }
 

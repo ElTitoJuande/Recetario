@@ -77,11 +77,8 @@ insert into rece_eti values(1, 3);
 insert into rece_eti values(1, 7);
 insert into rece_eti values(2, 2);
 
-
-select nombre, creador, p_descripcion, ingredientes, descripcion from recetas, rece_eti
-where recetas.ident = rece_eti.ident
-and ident_e = 2 and ident IN (select r.ident from recetas r, rece_eti
-where recetas.ident = rece_eti.ident
-and ident_e = 7);
-
 commit;
+
+
+
+ 

@@ -36,7 +36,6 @@ public class Conexion {
         Statement s = con.createStatement();
         s.executeUpdate(a);
 
-        //con.commit();
     }
 
     public void cerrar() throws SQLException {
@@ -85,17 +84,82 @@ public class Conexion {
 
         eleccion3 = sc.nextInt();
         sc.nextLine();
+        
         switch (eleccion3) {
             case 1:
                 System.out.println("....BUSCADOR POR NOMBRE DE CHEF....");
                 nombre = sc.nextLine();
                 String consulta_buscador1 = "Select * from recetas where creador='" + nombre + "'";
                 rs = c.select(consulta_buscador1);
-                while (rs.next()) {
+                
+                /*while (rs.next()) {
                     System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));  
-                }
+                }*/
+                
+                do {
+                     String consul_rece = "select * from recetas where creador='" + nombre + "' order by ident asc";
+                    rs = c.select(consul_rece);
+                    while (rs.next()) {
+                        System.out.println("[" + rs.getString(1) + "] " + rs.getString(2));
+                    }
+                    System.out.println("");
+                    System.out.println("*SELECCIONA EL [ID] DE LA RECETA");
+                    System.out.println("*SALIR [-1]");
+
+                    cont = sc.nextInt();
+                    if (cont != -1) {
+                        opc = -1;
+                        String consulta_ver_receta = "Select * from recetas where ident=" + cont + "";
+                        try {
+                            c.select(consulta_ver_receta);
+                            rs = c.select(consulta_ver_receta);
+                            rs.next();
+                            System.out.println("");
+                            System.out.println("[" + rs.getString(1) + "] " + rs.getString(2));
+                            System.out.println("    -Creador: " + rs.getString(3));
+                            System.out.println("    -Descripción Corta: " + rs.getString(3));
+                            System.out.println("    -Ingredientes: " + rs.getString(4));
+                            System.out.println("    -Descripción: " + rs.getString(5));
+                            
+                            System.out.println("    -Puntuacion Media: " + rs.getInt(6) / rs.getInt(7));
+                            System.out.println("");
+                        } catch (SQLException e) {
+                            System.out.println("Ha fallado la consulta:");
+                            System.out.println(e.getLocalizedMessage());
+                        }
+                        c.puntuacion(sc, opc, cont, c, rs);
+                        do {
+                            System.out.println("*¿Quieres introducir una puntuación? [0] NO [1] SÍ");
+                            try {
+                                opc = sc.nextInt();
+                            } catch (Exception e) { //NO FUNCIONA
+                                System.out.println("Introduce [0] o [1]");
+                                //System.out.println(e.getLocalizedMessage());
+                                opc = -1;
+                                sc.nextLine();
+                            }
+
+                        } while (opc < 0 || opc > 1);
+
+                        if (opc == 1) {
+                            System.out.println("*Introduce una puntuación: ");
+                            float puntuacion = sc.nextFloat();
+
+                            String consulta_puntuacion = "update recetas set punt_tot= punt_tot+" + puntuacion + ", n_punt=n_punt+1 where ident = " + cont;
+                            try {
+                                c.insert(consulta_puntuacion);
+                                rs.next();
+
+                            } catch (SQLException e) {
+                                System.out.println("Ha fallado la consulta:");
+                                System.out.println(e.getLocalizedMessage());
+                            }
+                        }
+                    }
+                } while (cont != -1);
+                
                 if (tipo_normal != 3) {
-                      c.puntuacion(sc, opc, cont, c, rs);
+                      c.puntuacion( sc, opc, cont, c, rs);
                 }
                          
                 
@@ -109,15 +173,15 @@ public class Conexion {
                     System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));
                 }
                 if (tipo_normal != 3) {
-                      c.puntuacion(sc, opc, cont, c, rs);
+                      c.puntuacion( sc, opc, cont, c, rs);
                 }
                 break;
             case 3:
-                rs = c.select("select count(*) from etiquetas");
+                rs = c.select("select * from etiquetas");
                 rs.next();
                 System.out.println("....BUSCADOR POR ETIQUETA DE RECETA....");
                 while (rs.next()) {
-                    System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));
+                    System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) );
                 }
                 
 
@@ -138,14 +202,14 @@ public class Conexion {
                     System.out.println("ETIQUETA: " + eti);
 
                 }
-                System.out.println(consul);
 
                 rs = c.select(consul);
                 while (rs.next()) {
                     System.out.println("[" + rs.getString(1) + "] " + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5));
                 }
+                
                 if (tipo_normal != 3) {
-                      c.puntuacion(sc, opc, cont, c, rs);
+                      c.puntuacion( sc, opc, cont, c, rs);
                 }
 
                 break;
